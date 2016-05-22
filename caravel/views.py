@@ -1292,6 +1292,11 @@ class Caravel(BaseCaravelView):
         """Personalized welcome page"""
         return self.render_template('caravel/welcome.html', utils=utils)
 
+    @has_access
+    @expose("/carapal")
+    def carapal(self):
+        """SQL Editor"""
+        return self.render_template('caravel/carapal.html')
 
 appbuilder.add_view_no_menu(Caravel)
 
@@ -1320,6 +1325,11 @@ appbuilder.add_view(
     category="Sources",
     category_label=__("Sources"),
     category_icon='')
+
+appbuilder.add_link(
+    "SQL",
+    href='/caravel/carapal',
+    icon="fa-table")
 
 
 # ---------------------------------------------------------------------
