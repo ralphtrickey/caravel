@@ -1261,6 +1261,57 @@ class Caravel(BaseCaravelView):
         return content
 
     @has_access
+    @expose("/sql_json/", methods=['POST', 'GET'])
+    @log_this
+    def runsql(self):
+        """Runs arbitrary sql and returns and html table"""
+        session = db.session()
+        limit = 1000
+        sql = request.form.get('sql')
+        database_id = request.form.get('database_id')
+        mydb = session.query(models.Database).filter_by(id=database_id).first()
+
+        if (
+                not self.can_access(
+                    'all_datasource_access', 'all_datasource_access')):
+            raise utils.CaravelSecurityException(_(
+                "This view requires the `all_datasource_access` permission"))
+
+        error_msg = ""
+        if not mydb:
+            error_msg = "The database selected doesn't seem to exist"
+        else:
+            eng = mydb.get_sqla_engine()
+            if limit:
+                sql = sql.strip().strip(';')
+                qry = (
+                    select('*')
+                    .select_from(TextAsFrom(text(sql), ['*']).alias('inner_qry'))
+                    .limit(limit)
+                )
+                sql = str(qry.compile(eng, compile_kwargs={"literal_binds": True}))
+            try:
+                df = pd.read_sql_query(sql=sql, con=eng)
+                df = df.fillna(0)  # TODO
+            except Exception as e:
+                error_msg = "{}".format(e)
+
+        session.commit()
+        if error_msg:
+            return Response(
+                json.dumps({
+                    'msg': error_msg,
+                }),
+                status=500,
+                mimetype="application/json")
+        else:
+            data = {
+                'columns': [c for c in df.columns],
+                'data': df.to_dict(orient='records'),
+            }
+            return json.dumps(data, default=utils.json_int_dttm_ser, allow_nan=False)
+
+    @has_access
     @expose("/refresh_datasources/")
     def refresh_datasources(self):
         """endpoint that refreshes druid datasources metadata"""

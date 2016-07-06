@@ -16,6 +16,13 @@
 .SqlEditor .panel-heading {
     padding: 5px;
 }
+.window.panel-heading {
+    padding: 1px 5px;
+}
+.loading {
+    width: 50px;
+    margin-top: 15px;
+}
 .pane-cell {
     padding: 10px;
     overflow: auto;
@@ -34,13 +41,13 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+div.Workspace {
+    height: 100%;
+    margin: 0px;
+}
 .SqlEditor .clock {
     background-color: orange;
     padding: 5px;
-}
-.SqlEditor button {
-    font-size: 10px;
-    height: 25px;
 }
 
 .p-t-10 {
@@ -50,16 +57,6 @@
     height: 100%;
     overflow: auto;
 }
-table td .label {
-    display: inline-block;
-    font-size: 12px;
-}
-table td i {
-    display: inline-block;
-    margin-top: 5px;
-    margin-right: 5px;
-}
-
 .ws-el .ws-el-controls { display: none; }
 .ws-el:hover .ws-el-controls { display: block; }
 .ws-el {
@@ -67,20 +64,26 @@ table td i {
     padding: 1px 6px;
     border: 1px solid transparent;
 }
+.circle-running {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border: 1px solid #444;
+    background-color: lime;
+}
 .ws-el:hover { border: 1px solid #DDD; }
 
 .handle {
     cursor: move;
 }
 .window {
-    //border-radius: 10px;
-    //background: white;
-    //padding: 15px;
     z-index: 1000;
     position: absolute;
     width: 300px;
     opacity: 0.85;
     border: 1px solid #AAA;
+    max-height: 600px;
     box-shadow: rgba(0, 0, 0, 0.8) 5px 5px 25px
 }
 
@@ -88,12 +91,16 @@ table td i {
     padding: 5px 10px;
 }
 
-.SqlEditor .table-condensed > tbody > tr > td {
-    padding: 1px 5px;
+.SqlAnvil table {
+    font-size: 12px;
 }
 
-.App table {
+.SqlAnvil table {
     margin: 0px;
+}
+
+.SqlAnvil .table-condensed > tbody > tr > td {
+    padding: 0px 5px;
 }
 
 .Resizer {
@@ -145,4 +152,8 @@ Resizer.disabled {
 }
 Resizer.disabled:hover {
     border-color: transparent;
+}
+
+a.Link {
+    padding: 7px 3px;
 }
